@@ -4,7 +4,7 @@
     <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-    <meta name="description" content="二分法" />
+    <meta name="description" content="二分" />
     <meta name="hexo-theme-A4" content="v1.9.7" />
     <link rel="alternate icon" type="image/webp" href="/img/laptop-code.svg">
     <title>Casey</title>
@@ -176,7 +176,7 @@
         
             
                 <div class="post-main-title" style="text-align: center;">
-                    二分法
+                    二分
                 </div>
             
         
@@ -195,7 +195,7 @@
                     
                         &nbsp; | &nbsp;
                     
-                     <span>字数总计：14</span>
+                     <span>字数总计：165</span>
                 
                 
                     
@@ -218,7 +218,12 @@
         
             
         
-        <div class=".article-gallery"><p>两种区间取法。<br>两种用法。<br>浮点二分。</p>
+        <div class=".article-gallery"><h2 id="整数二分"><a href="#整数二分" class="headerlink" title="整数二分"></a>整数二分</h2><p>首先来看整数二分最经典的应用：从升序的数组 <code>nums</code> 中找到值为 <code>x</code> 的点。<br>为了解决这个问题，我们可以将区间从中间一分为二，判断所需的子区间，代码如下。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nums[i];</span><br></pre></td></tr></table></figure>
+<p>将这个问题拓展一下：从升序数组中找到值大于等于 <code>x</code> 下标最小的点</p>
+<p>类似的，有从降序数组中找到值小于等于 <code>x</code> 下标最大的点</p>
+<p>讨论关于区间端点的设置与区间 <code>mid</code> 的取法。</p>
+<h2 id="浮点二分"><a href="#浮点二分" class="headerlink" title="浮点二分"></a>浮点二分</h2><p>浮点二分并不存在区间端点问题，只需要控制精度。</p>
 </div>
     </div>
 
