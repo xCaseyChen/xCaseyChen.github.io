@@ -307,13 +307,13 @@ mjx-container[display="true"] + br {
                     
                         &nbsp; | &nbsp;
                     
-                     <span>字数总计：1k</span>
+                     <span>字数总计：1.4k</span>
                 
                 
                     
                         &nbsp; | &nbsp;
                     
-                    <span>阅读估时：4分钟</span>
+                    <span>阅读估时：5分钟</span>
                 
                 
                     
@@ -345,12 +345,27 @@ mjx-container[display="true"] + br {
 <p>假设某项目有以下目录结构及文件内容。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">src/dir</span><br><span class="line">├──greet</span><br><span class="line">|   └──hello.go</span><br><span class="line">|</span><br><span class="line">├──init.go</span><br><span class="line">└──main.go</span><br></pre></td></tr></table></figure>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* hello.go */</span></span><br><span class="line"><span class="keyword">package</span> greet</span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Hello</span><span class="params">()</span></span> {</span><br><span class="line">  fmt.Println(<span class="string">"Hello Go!"</span>)</span><br><span class="line">}</span><br><span class="line"><span class="comment">/* init.go */</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> {</span><br><span class="line">  fmt.Println(<span class="string">"init() from init.go"</span>)</span><br><span class="line">}</span><br><span class="line"><span class="comment">/* main.go */</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> <span class="string">"dir/greet"</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> {</span><br><span class="line">  greet.Hello()</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
-<p>这里的 <code>init.go</code> 文件和 <code>main.go</code> 文件在同一文件夹下，所以他们的包名应该相同，且由于是 <code>package main</code> ，他们应该放在项目根目录下。 <code>hello.go</code> 则是属于 <code>package greet</code> ，放在了子文件夹中。另外， <code>package greet</code> 中的函数 <code>Hello()</code> 必须首字母大写，才能保证该函数是可导出的。</p>
-<p>对于 <code>main.go</code> ，可以单独执行该文件，也可以将项目整体编译执行，两种情况下的执行结果不同，程序的执行结果如下。</p>
+<p>这里的 <code>init.go</code> 文件和 <code>main.go</code> 文件在同一文件夹下，所以他们的包名应该相同。且由于 <code>main.go</code> 有 <code>main()</code> 函数，所以是 <code>package main</code> ，他们都应该放在项目根目录下。 <code>hello.go</code> 则是属于 <code>package greet</code> ，放在了子文件夹中。另外， <code>package greet</code> 中的函数 <code>Hello()</code> 必须首字母大写，才能保证该函数是可导出的。</p>
+<p>对于 <code>main.go</code> ，可以单独执行该文件，也可以将项目整体编译执行，两种情况下的执行结果不同，如下所示。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">go run main.go <span class="comment"># -&gt; Hello Go!</span></span><br><span class="line">go run . <span class="comment"># -&gt; init() from init.go\nHello Go!</span></span><br></pre></td></tr></table></figure>
 <p>Go 程序在启动后会先执行 <code>init()</code> 函数，再执行 <code>main()</code> 函数。而整体执行会将 <code>init.go</code> 引入，从而运行时会先调用其中的 <code>init()</code> 函数。</p>
-<h2 id="输入输出"><a href="#输入输出" class="headerlink" title="输入输出"></a>输入输出</h2><h3 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h3><h3 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h3><h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>Go 中的数据类型主要有三种布尔型 <code>bool</code> ，整型 <code>int</code> 以及浮点型 <code>float32</code> / <code>float64</code>。</p>
-<p>整型有基于架构的变量 <code>int8</code> ， <code>int16</code> ， <code>int32</code> ， <code>int64</code> 以及  <code>uint8</code> ， <code>uint16</code> ， <code>uint32</code> ， <code>uint64</code> 。</p>
+<h2 id="输入输出"><a href="#输入输出" class="headerlink" title="输入输出"></a>输入输出</h2><h3 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h3><p><code>fmt.Scanf()</code></p>
+<p><code>fmt.Scan()</code></p>
+<p><code>fmt.Scanln()</code></p>
+<h3 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h3><p><code>fmt.Printf()</code> 支持格式化输出，使用方式类比 C 的 <code>printf()</code>。<br><code>fmt.Sprintf()</code> 支持格式化输出，使用方式类比于 C 的 <code>sprintf</code>。<br>Go 中额外支持的格式有：</p>
+<ul>
+<li><code>%v</code> ，按本来值输出，会自动转换，支持输出结构体和数组等</li>
+<li><code>%+v</code> ，在 <code>%v</code> 的基础上会展开结构体的字段名</li>
+<li><code>%#v</code> ，在 <code>%+v</code> 的基础上再输出结构体名（类型）</li>
+<li><code>%T</code> ，输出类型</li>
+</ul>
+<p><code>fmt.Print()</code> 无需格式化输出，其会默认将每个参数以 <code>%v</code> 输出。<br><code>fmt.Println()</code> 在 <code>fmt.Print()</code> 基础上将内容输出并以空格分隔，默认在行尾加上换行。</p>
+<p>示例如下。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x, y := <span class="number">1</span>, <span class="number">2.2</span></span><br><span class="line">fmt.Println(<span class="string">"hello"</span>, <span class="string">"go"</span>, <span class="string">"!"</span>) <span class="comment">// -&gt; hello go !</span></span><br><span class="line">fmt.Printf(<span class="string">"%d %f\n"</span>, x, y) <span class="comment">// -&gt; 1 2.200000</span></span><br><span class="line">z := fmt.Sprintf(<span class="string">"x=%d y=%f"</span>, x, y) <span class="comment">// z = "x=1 y=2.200000"</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>Go 中的数据类型主要有三种布尔型 <code>bool</code> ，整型 <code>int</code> 以及浮点型 <code>float32</code> / <code>float64</code>。</p>
+<p>整型除了有一般的 <code>int</code> 外，还有基于架构的变量 <code>int8</code> ， <code>int16</code> ， <code>int32</code> ， <code>int64</code> 以及  <code>uint8</code> ， <code>uint16</code> ， <code>uint32</code> ， <code>uint64</code> 。</p>
 <p>浮点型有 <code>float32</code> ， <code>float64</code> 以及复数 <code>complex64</code> （32 位实数和虚数）， <code>complex128</code> （64 位实数和虚数）。</p>
 <h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><p>变量的声明方式为 <code>var x [type]</code> ，示例如下。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x <span class="type">bool</span> = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">var</span> y <span class="type">int</span> = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">var</span> z <span class="type">string</span> = <span class="string">"hello"</span></span><br></pre></td></tr></table></figure>
@@ -368,10 +383,17 @@ mjx-container[display="true"] + br {
 <p><code>iota</code> 为特殊的常量，其会在 <code>const</code> 出现时置为 <code>0</code> ，常用于枚举，示例如下。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> (</span><br><span class="line">  a = <span class="literal">iota</span>    <span class="comment">// iota = 0, a = 0</span></span><br><span class="line">  b           <span class="comment">// iota = 1, 使用上一行表达式 b = iota = 1</span></span><br><span class="line">  c = <span class="literal">true</span>    <span class="comment">// iota = 2</span></span><br><span class="line">  d = <span class="string">"hello"</span> <span class="comment">// iota = 3</span></span><br><span class="line">  e = <span class="literal">iota</span>    <span class="comment">// iota = 4, e = 4</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 <p>在声明常量组时，如果未指定值，则会使用上一行的表达式。</p>
+<h2 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h2><p>Go 中的运算符规则与 C 和 C++ 基本一致，包含有算数运算符、关系运算符、逻辑运算符、位运算符和赋值运算符。仅有一处不同，即自增运算符不支持赋值，示例如下。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x, y <span class="type">int</span> = <span class="number">10</span>, <span class="number">0</span></span><br><span class="line">y = x++ <span class="comment">// !错误</span></span><br></pre></td></tr></table></figure>
+
+<p>Go 也支持取地址 <code>&amp;</code> 和指针变量 <code>*</code> 运算符。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x <span class="type">int</span> = <span class="number">10</span></span><br><span class="line"><span class="keyword">var</span> y *<span class="type">int</span> = &amp;x</span><br></pre></td></tr></table></figure>
+
+
+
 <h2 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h2><ol>
 <li>一个包中可以有多个 <code>init()</code> ，会在被导入的时候执行。同一个文件中的多个 <code>init()</code> 按顺序执行，不同文件中的多个不保证执行顺序。</li>
 <li>Go MODULE 作用</li>
-<li><code>uintptr</code></li>
 <li>字符串为结构体，含有地址及长度</li>
 </ol>
 </div>
