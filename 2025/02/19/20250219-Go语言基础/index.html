@@ -307,13 +307,13 @@ mjx-container[display="true"] + br {
                     
                         &nbsp; | &nbsp;
                     
-                     <span>字数总计：1.4k</span>
+                     <span>字数总计：1.6k</span>
                 
                 
                     
                         &nbsp; | &nbsp;
                     
-                    <span>阅读估时：5分钟</span>
+                    <span>阅读估时：6分钟</span>
                 
                 
                     
@@ -349,10 +349,7 @@ mjx-container[display="true"] + br {
 <p>对于 <code>main.go</code> ，可以单独执行该文件，也可以将项目整体编译执行，两种情况下的执行结果不同，如下所示。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">go run main.go <span class="comment"># -&gt; Hello Go!</span></span><br><span class="line">go run . <span class="comment"># -&gt; init() from init.go\nHello Go!</span></span><br></pre></td></tr></table></figure>
 <p>Go 程序在启动后会先执行 <code>init()</code> 函数，再执行 <code>main()</code> 函数。而整体执行会将 <code>init.go</code> 引入，从而运行时会先调用其中的 <code>init()</code> 函数。</p>
-<h2 id="输入输出"><a href="#输入输出" class="headerlink" title="输入输出"></a>输入输出</h2><h3 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h3><p><code>fmt.Scanf()</code></p>
-<p><code>fmt.Scan()</code></p>
-<p><code>fmt.Scanln()</code></p>
-<h3 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h3><p><code>fmt.Printf()</code> 支持格式化输出，使用方式类比 C 的 <code>printf()</code>。<br><code>fmt.Sprintf()</code> 支持格式化输出，使用方式类比于 C 的 <code>sprintf</code>。<br>Go 中额外支持的格式有：</p>
+<h2 id="输入输出"><a href="#输入输出" class="headerlink" title="输入输出"></a>输入输出</h2><h3 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h3><p><code>fmt.Printf()</code> 支持格式化输出，使用方式类比 C 的 <code>printf()</code>。<br><code>fmt.Sprintf()</code> 支持格式化输出，使用方式类比于 C 的 <code>sprintf</code>。<br>相较于 C，Go 中额外支持的格式有：</p>
 <ul>
 <li><code>%v</code> ，按本来值输出，会自动转换，支持输出结构体和数组等</li>
 <li><code>%+v</code> ，在 <code>%v</code> 的基础上会展开结构体的字段名</li>
@@ -362,6 +359,12 @@ mjx-container[display="true"] + br {
 <p><code>fmt.Print()</code> 无需格式化输出，其会默认将每个参数以 <code>%v</code> 输出。<br><code>fmt.Println()</code> 在 <code>fmt.Print()</code> 基础上将内容输出并以空格分隔，默认在行尾加上换行。</p>
 <p>示例如下。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x, y := <span class="number">1</span>, <span class="number">2.2</span></span><br><span class="line">fmt.Println(<span class="string">"hello"</span>, <span class="string">"go"</span>, <span class="string">"!"</span>) <span class="comment">// -&gt; hello go !</span></span><br><span class="line">fmt.Printf(<span class="string">"%d %f\n"</span>, x, y) <span class="comment">// -&gt; 1 2.200000</span></span><br><span class="line">z := fmt.Sprintf(<span class="string">"x=%d y=%f"</span>, x, y) <span class="comment">// z = "x=1 y=2.200000"</span></span><br></pre></td></tr></table></figure>
+<h3 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h3><p><code>fmt.Scanf()</code> 的使用方式类似于 C 中的 <code>scanf()</code> ，但是其在读入 <code>\n</code> 时就会直接结束。因此， <code>fmt.Scanf()</code> 在多行读入时需要注意换行的读入，示例如下。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// INPUT: 1\n2\n3\n</span></span><br><span class="line"><span class="keyword">var</span> x, y, z <span class="type">string</span></span><br><span class="line">Scanf(<span class="string">"%s"</span>, &amp;x) <span class="comment">// 读入 1</span></span><br><span class="line">Scanf(<span class="string">"%s"</span>, &amp;y) <span class="comment">// 读入 \n 结束</span></span><br><span class="line">Scanf(<span class="string">"%s"</span>, &amp;z) <span class="comment">// 读入 2</span></span><br><span class="line">fmt.Println(x, y, z) <span class="comment">// -&gt; 1 2</span></span><br></pre></td></tr></table></figure>
+
+<p><code>fmt.Scan()</code> 使用方式为 <code>fmt.Scan(&amp;x, &amp;y, &amp;z)</code> ，但是其会忽略 <code>\n</code> ，读到时不会结束，因此多行读入可以直接使用。</p>
+<p><code>fmt.Scanln()</code> 使用方式为类似于 <code>fmt.Scan()</code> ，但是其也会在读入 <code>\n</code> 时就结束，但是不同于 <code>fmt.Scanf()</code> 的是其会将缓冲区中的 <code>\n</code> 收走，示例如下。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// INPUT: 1\n2\n3\n</span></span><br><span class="line"><span class="keyword">var</span> x, y, z <span class="type">string</span></span><br><span class="line">Scanf(<span class="string">"%s"</span>, &amp;x) <span class="comment">// 读入 1 收走 \n 并结束 </span></span><br><span class="line">Scanf(<span class="string">"%s"</span>, &amp;y) <span class="comment">// 读入 2 收走 \n 并结束</span></span><br><span class="line">Scanf(<span class="string">"%s"</span>, &amp;z) <span class="comment">// 读入 3 收走 \n 并结束</span></span><br><span class="line">fmt.Println(x, y, z) <span class="comment">// -&gt; 1 2 3</span></span><br></pre></td></tr></table></figure>
 
 
 <h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>Go 中的数据类型主要有三种布尔型 <code>bool</code> ，整型 <code>int</code> 以及浮点型 <code>float32</code> / <code>float64</code>。</p>
