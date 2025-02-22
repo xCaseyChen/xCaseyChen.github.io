@@ -307,13 +307,13 @@ mjx-container[display="true"] + br {
                     
                         &nbsp; | &nbsp;
                     
-                     <span>字数总计：2k</span>
+                     <span>字数总计：2.3k</span>
                 
                 
                     
                         &nbsp; | &nbsp;
                     
-                    <span>阅读估时：8分钟</span>
+                    <span>阅读估时：9分钟</span>
                 
                 
                     
@@ -365,12 +365,22 @@ mjx-container[display="true"] + br {
 <p>字符串也可以使用 <code>len()</code> 函数，以下是示例。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">str1 := <span class="string">"Hello"</span></span><br><span class="line">str2 := <span class="string">"你好"</span></span><br><span class="line">fmt.Println(<span class="built_in">len</span>(str1), <span class="built_in">len</span>(str2)) -&gt; <span class="number">5</span> <span class="number">6</span></span><br></pre></td></tr></table></figure>
 <p>不难发现，字符串的 <code>len()</code> 实际上求的是所占 <code>byte</code> 数量。</p>
+<h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>集合 <code>map</code> 是指无序的键值对集合，可以类比为 C 中的哈希表 <code>unordered_map</code>。集合的定义方式如下。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]<span class="type">int</span>, <span class="number">10</span>)</span><br><span class="line">m := <span class="keyword">map</span>[<span class="type">string</span>]<span class="type">int</span>{</span><br><span class="line">  <span class="string">"apple"</span>: <span class="number">10</span>,</span><br><span class="line">  <span class="string">"banana"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="string">"pineapple"</span>: <span class="number">5</span>,</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>第一种定义方法将 <code>string</code> 置为键，<code>int</code> 置为值，设定了一个大小为 10 的集合；第二种方法则是直接指定了键值对。</p>
+<p>获取集合中的元素可以直接使用键获取，如下。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">v, valid := m[<span class="string">"apple"</span>]</span><br><span class="line">fmt.Println(v, valid) <span class="comment">// -&gt; 10 true</span></span><br><span class="line"></span><br><span class="line">v, valid = m[<span class="string">"pear"</span>]</span><br><span class="line">fmt.Println(v, valid) <span class="comment">// -&gt; 0, false （未成功取到）</span></span><br></pre></td></tr></table></figure>
+
+<p>键值对可以直接修改，或是使用 <code>delete</code> 删除，也可以使用 <code>len()</code> 获取长度，示例如下。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">m[<span class="string">"apple"</span>] = <span class="number">8</span></span><br><span class="line">fmt.Println(<span class="built_in">len</span>(m)) <span class="comment">// -&gt; 3</span></span><br><span class="line"><span class="built_in">delete</span>(m, <span class="string">"banana"</span>)</span><br><span class="line">fmt.Println(<span class="built_in">len</span>(m)) <span class="comment">// -&gt; 2</span></span><br></pre></td></tr></table></figure>
+
+
 <h3 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h3><p>类似于 C，结构体的定义方式的示例如下。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Student <span class="keyword">struct</span> {</span><br><span class="line">  id <span class="type">string</span> <span class="comment">// 类型，变量名</span></span><br><span class="line">  name <span class="type">string</span></span><br><span class="line">  age <span class="type">int</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure>
 <p>不同于 C 的是，访问结构体成员时，结构体变量和结构体指针都使用 <code>.</code> 来访问成员，示例如下。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> stu1 Student;</span><br><span class="line"><span class="keyword">var</span> stu_ptr *Student = &amp;stu1</span><br><span class="line"><span class="comment">// ... 赋值等操作</span></span><br><span class="line">fmt.Println(stu1.id, stu_ptr.id)</span><br></pre></td></tr></table></figure>
 <p>若要实现结构体成员在包外的访问，需要将结构体的首字母大写，使其成为可导出的成员。</p>
-<h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><h2 id="条件语句"><a href="#条件语句" class="headerlink" title="条件语句"></a>条件语句</h2><p>Go 中的条件语句有两种，分别是 <code>if</code> 和 <code>switch</code>。</p>
+<h2 id="条件语句"><a href="#条件语句" class="headerlink" title="条件语句"></a>条件语句</h2><p>Go 中的条件语句有两种，分别是 <code>if</code> 和 <code>switch</code>。</p>
 <h3 id="if-语句"><a href="#if-语句" class="headerlink" title="if 语句"></a><code>if</code> 语句</h3><p><code>if</code> 条件语句的使用方式类似于 C，在语法上有细微的不同：判断条件不用添加 <code>()</code>，<code>else</code> 需要紧跟 <code>}</code>，示例如下。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> a &gt;= <span class="number">50</span> { <span class="comment">// 判断条件无 ()</span></span><br><span class="line">  fmt.Println(<span class="string">"a &gt;= 50"</span>)</span><br><span class="line">} <span class="keyword">else</span> <span class="keyword">if</span> a &gt;= <span class="number">20</span> { <span class="comment">// else 需要紧跟 '}'</span></span><br><span class="line">  fmt.Println(<span class="string">"20 &lt;= a &lt; 50"</span>)</span><br><span class="line">} <span class="keyword">else</span> {</span><br><span class="line">  fmt.Println(<span class="string">"a &lt; 20"</span>)</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
 <h3 id="switch-语句"><a href="#switch-语句" class="headerlink" title="switch 语句"></a><code>switch</code> 语句</h3><p><code>switch</code> 条件语句的使用方式也类似于 C，仅在语法上存在细微不同：变量不用添加 <code>()</code>，自动进行 <code>break</code> 操作，一个 <code>case</code> 可以有多个条件。示例如下。</p>
@@ -385,9 +395,11 @@ mjx-container[display="true"] + br {
 <p>类似于 C，Go 也有 <code>break</code> 和 <code>continue</code> 语句。另外 Go 也支持 <code>goto</code> 语句，示例如下。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">var</span> i <span class="type">int</span> = <span class="number">0</span></span><br><span class="line">LOOP: </span><br><span class="line">  <span class="keyword">for</span> i &lt; <span class="number">10</span> {</span><br><span class="line">    <span class="keyword">if</span> (i &gt; <span class="number">5</span>) {</span><br><span class="line">      i++</span><br><span class="line">      <span class="keyword">goto</span> LOOP</span><br><span class="line">    }</span><br><span class="line">    i++</span><br><span class="line">    fmt.Println(i)</span><br><span class="line">  }</span><br></pre></td></tr></table></figure>
 
+<p><strong>使用 range 进行遍历</strong>。<code>for range</code> 循环可以遍历数组(array)、切片(slice)、通道(channel)或集合(map)的元素。字符串作为一种特殊的数组，也可以使用 <code>range</code> 遍历。示例如下。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i, val := arr { <span class="comment">// arr, slice, str</span></span><br><span class="line">  fmt.Println(i, val)</span><br><span class="line">}</span><br><span class="line"><span class="keyword">for</span> key, val := m {</span><br><span class="line">  fmt.Println(key, val)</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>这里可以使用 <code>_</code> 来忽略 <code>i</code> 或是 <code>val</code>，并且注意这里的 <code>val</code> 是个临时变量，操作并不会反映到原变量中。</p>
 <h2 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h2><ol>
 <li>Go 中的 <code>...</code> 有可变参数展开的作用，其会将变参展开为独立变量传入，示例如下。<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">s1 := []<span class="type">int</span>{<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>}</span><br><span class="line">s2 := <span class="built_in">make</span>([]<span class="type">int</span>, <span class="number">5</span>, <span class="number">10</span>)</span><br><span class="line">s2 = <span class="built_in">append</span>(s2, s1...) <span class="comment">// 展开传入</span></span><br><span class="line">fmt.Println(s2) <span class="comment">// -&gt; [0 0 0 0 0 1 2 3]</span></span><br></pre></td></tr></table></figure></li>
-<li></li>
 </ol>
 </div>
     </div>
