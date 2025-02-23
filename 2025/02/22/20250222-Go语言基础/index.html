@@ -307,13 +307,13 @@ mjx-container[display="true"] + br {
                     
                         &nbsp; | &nbsp;
                     
-                     <span>字数总计：2.4k</span>
+                     <span>字数总计：2.7k</span>
                 
                 
                     
                         &nbsp; | &nbsp;
                     
-                    <span>阅读估时：10分钟</span>
+                    <span>阅读估时：11分钟</span>
                 
                 
                     
@@ -336,7 +336,7 @@ mjx-container[display="true"] + br {
 <p>运算操作符不支持 <code>%</code>（取模），关系操作符仅支持 <code>==</code> 及 <code>!=</code>，不支持逻辑运算符及位运算符。</p>
 <p>复数类型使用 <code>real()</code> 和 <code>imag()</code> 可以获取取实部与虚部，复数可以转换为浮点类型，示例如下。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">c := <span class="built_in">complex</span>(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">fmt.Println(<span class="built_in">real</span>(c), <span class="built_in">imag</span>(c)) <span class="comment">// 1 2</span></span><br></pre></td></tr></table></figure>
-
+<p>复数类型一旦创建无法直接进行修改，若想修改只能创建一个新的复数。</p>
 <h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>数组声明时必须指明大小，以下是几种数组的声明方法。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> nums [<span class="number">10</span>]<span class="type">int</span></span><br><span class="line"><span class="keyword">var</span> nums = [<span class="number">10</span>]<span class="type">int</span>{<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>}</span><br><span class="line">nums := [<span class="number">10</span>]<span class="type">int</span>{<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>}</span><br><span class="line">nums := [...]<span class="type">int</span>{<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>}</span><br><span class="line">nums := [<span class="number">10</span>]<span class="type">int</span>{<span class="number">1</span>: <span class="number">3</span>, <span class="number">2</span>: <span class="number">4</span>}</span><br></pre></td></tr></table></figure>
 <p>第一种是数组的最基本声明方式 <code>var nums [size]type</code>，创建了一个长度为 10 的 <code>int</code> 型数组，其中的数值全部初始化为 0；第二种声明方式不明确指明变量类型，由 Go 进行推断，数组仅对前 5 个元素指明数值，其他元素初始化为 0；第三种为第二种的简明声明方式；第四种声明方式不指明数组长度，由 Go 根据数组元素数量进行推断，得到一个长度为 5 的数组；第五种根据索引对数组的某些特定位置进行赋值，将 <code>nums[1]</code> 和 <code>nums[2]</code> 分别赋值为 3 和 4，其他元素默认为 0。</p>
@@ -361,10 +361,13 @@ mjx-container[display="true"] + br {
 <h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><p>字符串的底层实现实际为一个结构体，包含有字符串基址及字符串长度，基址中存放 <code>byte</code> 型数组。Go 中的字符串一经创建无法直接修改。</p>
 <p>为了修改字符串，需要对字符串创建切片，然后对切片进行修改，示例如下。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str <span class="type">string</span> = <span class="string">"Hello World"</span></span><br><span class="line">s1 := str[<span class="number">1</span>:<span class="number">5</span>] <span class="comment">// 错误，这不是一个切片操作，会返回一个 string</span></span><br><span class="line">s2 := []<span class="type">byte</span>(str) <span class="comment">// 正确</span></span><br><span class="line">s2[<span class="number">0</span>] = <span class="string">'G'</span></span><br><span class="line">str = <span class="type">string</span>(s2);</span><br><span class="line">fmt.Println(str) <span class="comment">// -&gt; Gello World</span></span><br></pre></td></tr></table></figure>
-<p>对于 UTF-8 字符串需要使用 <code>[]rune()</code> 进行切片。</p>
+<p>对于 UTF-8 字符串需要使用 <code>[]rune()</code> 进行切片。仔细阅读上面的代码不难发现，就算是使用了切片修改字符串，最后还是需要将切片转换为字符串赋回原串，所以本质上是用一个新的字符串替代了原字符串。这里的原因是，字符串创建切片时用的是 <code>str</code> 的一个副本，而对于 <code>[]int</code> 的切片使用的是对底层数组的引用。</p>
 <p>字符串也可以使用 <code>len()</code> 函数，以下是示例。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">str1 := <span class="string">"Hello"</span></span><br><span class="line">str2 := <span class="string">"你好"</span></span><br><span class="line">fmt.Println(<span class="built_in">len</span>(str1), <span class="built_in">len</span>(str2)) -&gt; <span class="number">5</span> <span class="number">6</span></span><br></pre></td></tr></table></figure>
 <p>不难发现，字符串的 <code>len()</code> 实际上求的是所占 <code>byte</code> 数量。</p>
+<p>字符串支持 <code>+</code> 运算。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">str1 := <span class="string">"hello"</span></span><br><span class="line">str2 := <span class="string">"world"</span></span><br><span class="line">fmt.Println(str1 + <span class="string">" "</span> + str2) <span class="comment">// hello world</span></span><br></pre></td></tr></table></figure>
+
 <h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>集合 <code>map</code> 是指无序的键值对集合，可以类比为 C 中的哈希表 <code>unordered_map</code>。集合的定义方式如下。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]<span class="type">int</span>, <span class="number">10</span>)</span><br><span class="line">m := <span class="keyword">map</span>[<span class="type">string</span>]<span class="type">int</span>{</span><br><span class="line">  <span class="string">"apple"</span>: <span class="number">10</span>,</span><br><span class="line">  <span class="string">"banana"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="string">"pineapple"</span>: <span class="number">5</span>,</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
 <p>第一种定义方法将 <code>string</code> 置为键，<code>int</code> 置为值，设定了一个大小为 10 的集合；第二种方法则是直接指定了键值对。</p>
@@ -379,6 +382,11 @@ mjx-container[display="true"] + br {
 <p>不同于 C 的是，访问结构体成员时，结构体变量和结构体指针都使用 <code>.</code> 来访问成员，示例如下。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> stu1 Student;</span><br><span class="line"><span class="keyword">var</span> stu_ptr *Student = &amp;stu1</span><br><span class="line"><span class="comment">// ... 赋值等操作</span></span><br><span class="line">fmt.Println(stu1.id, stu_ptr.id)</span><br></pre></td></tr></table></figure>
 <p>若要实现结构体成员在包外的访问，需要将结构体的首字母大写，使其成为可导出的成员。</p>
+<p>结构体的初始化有几种方式，如下。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">stu := Student{<span class="string">"1"</span>, <span class="string">"casey"</span>, <span class="number">0</span>} <span class="comment">// 顺序初始化</span></span><br><span class="line">stu := Student{id: <span class="string">"1"</span>, name: <span class="string">"casey"</span>, age: <span class="number">0</span>} <span class="comment">// 指定字段初始化</span></span><br></pre></td></tr></table></figure>
+<p>若在结构体中存在 <code>slice</code>、<code>map</code>和<code>channel</code>，则需要使用到 <code>make</code>，示例如下。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stu := Student{id: <span class="string">"1"</span>, name: <span class="string">"casey"</span>, age: <span class="number">0</span>, m: <span class="built_in">make</span>([]<span class="type">int</span>, <span class="number">0</span>, <span class="number">5</span>)}</span><br></pre></td></tr></table></figure>
+
 <h2 id="条件语句"><a href="#条件语句" class="headerlink" title="条件语句"></a>条件语句</h2><p>Go 中的条件语句有两种，分别是 <code>if</code> 和 <code>switch</code>。</p>
 <h3 id="if-语句"><a href="#if-语句" class="headerlink" title="if 语句"></a><code>if</code> 语句</h3><p><code>if</code> 条件语句的使用方式类似于 C，在语法上有细微的不同：判断条件不用添加 <code>()</code>，<code>else</code> 需要紧跟 <code>}</code>，示例如下。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> a &gt;= <span class="number">50</span> { <span class="comment">// 判断条件无 ()</span></span><br><span class="line">  fmt.Println(<span class="string">"a &gt;= 50"</span>)</span><br><span class="line">} <span class="keyword">else</span> <span class="keyword">if</span> a &gt;= <span class="number">20</span> { <span class="comment">// else 需要紧跟 '}'</span></span><br><span class="line">  fmt.Println(<span class="string">"20 &lt;= a &lt; 50"</span>)</span><br><span class="line">} <span class="keyword">else</span> {</span><br><span class="line">  fmt.Println(<span class="string">"a &lt; 20"</span>)</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
@@ -402,6 +410,7 @@ mjx-container[display="true"] + br {
 <p>这里可以使用 <code>_</code> 来忽略 <code>i</code> 或是 <code>val</code>，并且注意这里的 <code>val</code> 是个临时变量，对 <code>val</code> 操作并不会反映到原变量中。</p>
 <h2 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h2><ol>
 <li>Go 中的 <code>...</code> 有可变参数展开的作用，其会将变参展开为独立变量传入，示例如下。<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">s1 := []<span class="type">int</span>{<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>}</span><br><span class="line">s2 := <span class="built_in">make</span>([]<span class="type">int</span>, <span class="number">5</span>, <span class="number">10</span>)</span><br><span class="line">s2 = <span class="built_in">append</span>(s2, s1...) <span class="comment">// 展开传入</span></span><br><span class="line">fmt.Println(s2) <span class="comment">// -&gt; [0 0 0 0 0 1 2 3]</span></span><br></pre></td></tr></table></figure></li>
+<li>在 Go 中只有 <code>slice</code> 有 <code>cap()</code> 函数，其他类型都只有 <code>len()</code> 函数，<code>len()</code> 返回实际元素个数。</li>
 </ol>
 </div>
     </div>
@@ -443,6 +452,8 @@ mjx-container[display="true"] + br {
             
     
             <div class="post-footer-pre-next">
+                
+                    <span>上一篇：<a href='/2025/02/23/20250223-Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/'>Go快速入门（三）</a></span>
                 
 
                 
