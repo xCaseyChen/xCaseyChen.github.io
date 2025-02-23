@@ -307,13 +307,13 @@ mjx-container[display="true"] + br {
                     
                         &nbsp; | &nbsp;
                     
-                     <span>字数总计：1.8k</span>
+                     <span>字数总计：2.1k</span>
                 
                 
                     
                         &nbsp; | &nbsp;
                     
-                    <span>阅读估时：7分钟</span>
+                    <span>阅读估时：8分钟</span>
                 
                 
                     
@@ -336,12 +336,11 @@ mjx-container[display="true"] + br {
 <p>第一段为包声明，说明这个文件属于哪个包。</p>
 <p>第二段 <code>import</code> 作用是引入外部包，<code>"fmt"</code> 中有格式化 IO 函数 <code>fmt.Println()</code>。</p>
 <p>后面的 <code>func main() {...}</code> 为程序执行的入口函数，<code>main()</code> 函数是每一个可执行程序所必须包含的，且必须属于 <code>package main</code> 才可以执行。</p>
-<h3 id="Package"><a href="#Package" class="headerlink" title="Package"></a>Package</h3><p><code>import</code> 导入包名（<code>package</code>），Go 在引入包时首先会在 <code>GOPATH/src</code> 和 <code>GOROOT/src</code> 两个路径中查找。因此，建议 Go 的开发尽量放在这两个路径下以减少不必要的麻烦。（TODO）</p>
+<h3 id="Package"><a href="#Package" class="headerlink" title="Package"></a>Package</h3><p><code>import</code> 导入包名（<code>package</code>），Go 在引入包时首先会在 <code>GOPATH/src</code> 和 <code>GOROOT/src</code> 两个路径中查找。因此，建议 Go 的开发尽量放在这两个路径下以减少不必要的麻烦。</p>
 <p>Go 的一个文件夹对应到一个包，包名是文件夹的路径名。同一个文件夹下的包名应该保持一致，并建议与文件夹名一致。同一个包中的函数、变量等不能出现重名。包中的函数、变量名需要首字母大写才能保证他是可以被其他程序调用的（可导出）。</p>
 <p>有时会遇到同名包的情况，这个时候需要使用到包的别名对同名包进行区分。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  agreet <span class="string">"toola/greet"</span></span><br><span class="line">  bgreet <span class="string">"toolb/greet"</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
-<h3 id="Module"><a href="#Module" class="headerlink" title="Module"></a>Module</h3><p>TODO</p>
 <h3 id="多文件结构"><a href="#多文件结构" class="headerlink" title="多文件结构"></a>多文件结构</h3><p>在项目中，应将 <code>package main</code> 的 Go 程序放在项目的根目录，且 <code>package main</code> 中仅存在有一个 <code>main()</code> 函数作为执行入口。</p>
 <p>假设某项目有以下目录结构及文件内容。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DIR</span><br><span class="line">├──greet</span><br><span class="line">|   └──hello.go</span><br><span class="line">|</span><br><span class="line">├──init.go</span><br><span class="line">└──main.go</span><br></pre></td></tr></table></figure>
@@ -383,7 +382,7 @@ mjx-container[display="true"] + br {
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x := <span class="number">1</span> <span class="comment">// 等同于 var x int = 1</span></span><br><span class="line">x := <span class="number">2</span> <span class="comment">// 错误！重复声明</span></span><br></pre></td></tr></table></figure>
 
 <p>多个变量可以同时声明，示例如下。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a, b, c <span class="type">int</span> = <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span></span><br><span class="line">x, y, z := <span class="literal">true</span>, <span class="number">10</span>, <span class="string">"hello"</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a, b, c <span class="type">int</span> = <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span></span><br><span class="line">x, y, z := <span class="literal">true</span>, <span class="number">10</span>, <span class="string">"hello"</span></span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">  a <span class="type">int</span></span><br><span class="line">  b <span class="type">string</span></span><br><span class="line">  c <span class="type">bool</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
 <h3 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h3><p>常量的声明方式为 <code>const x type</code>，其定义方式与使用方式与变量 <code>var</code> 一致。</p>
 <p><code>iota</code> 为特殊的常量，其会在 <code>const</code> 出现时置为 <code>0</code> ，常用于枚举，示例如下。</p>
@@ -392,6 +391,9 @@ mjx-container[display="true"] + br {
 <h3 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h3><p>数值类型之间的相互转换类似于 C，如下。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x <span class="type">float32</span> = <span class="number">1.22</span></span><br><span class="line"><span class="keyword">var</span> y <span class="type">int</span> = <span class="type">int</span>(x) <span class="comment">// y = 1</span></span><br></pre></td></tr></table></figure>
 <p>Go 不接受隐式类型转换。</p>
+<h3 id="类型别名"><a href="#类型别名" class="headerlink" title="类型别名"></a>类型别名</h3><p>可以使用 <code>type</code> 为类型定义一个别名，示例如下。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> myint = <span class="type">int</span></span><br></pre></td></tr></table></figure>
+<p>这里的 <code>myint</code> 本质上和 <code>int</code> 一致，并且可以直接和 <code>int</code> 进行运算。</p>
 <h2 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h2><p>Go 中的运算符规则与 C 和 C++ 基本一致，包含有算数运算符、关系运算符、逻辑运算符、位运算符和赋值运算符。仅有一处不同，自增运算符不支持赋值，示例如下。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x, y <span class="type">int</span> = <span class="number">10</span>, <span class="number">0</span></span><br><span class="line">y = x++ <span class="comment">// !错误</span></span><br></pre></td></tr></table></figure>
 
@@ -399,8 +401,15 @@ mjx-container[display="true"] + br {
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x <span class="type">int</span> = <span class="number">10</span></span><br><span class="line"><span class="keyword">var</span> y *<span class="type">int</span> = &amp;x</span><br></pre></td></tr></table></figure>
 
 <h2 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h2><ol>
-<li>一个包中可以有多个 <code>init()</code>，会在被导入的时候执行。同一个文件中的多个 <code>init()</code> 按顺序执行，不同文件中的多个 <code>init()</code> 不保证执行顺序。</li>
-<li>Go 中有空白标识符 <code>_</code>，是一个只写变量。</li>
+<li><p><code>init()</code> 函数调用顺序：</p>
+<ul>
+<li>对于同一个包中的 <code>init()</code>，调用顺序为文件名字符串比较由小到大调用。例如，同一个文件夹下有 A.go 和 B.go，均有 <code>init()</code> 函数，那么调用顺序为 A.go 中的 <code>init()</code> 到 B.go 中的 <code>init()</code>。</li>
+<li>对于调用的包中的 <code>init()</code>，调用顺序为 <code>import</code> 顺序。例如，A.go 依次调用了 B.go 和 C.go，且 B.go 和 C.go 都有 <code>init()</code>，那么调用顺序为 <code>B.go</code> 中的 <code>init()</code> 到 C.go 中的 <code>init()</code>。</li>
+<li>对于调用的包中存在有依赖调用，调用的顺序为最早调用的包中的 <code>init()</code> 最后到当前包中的 <code>init()</code>。例如，基于 2 中的例子，我们再假设 A.go 中也存在 <code>init()</code> 函数，那么调用顺序为 B.go 中的 <code>init()</code> 到 C.go 中的 <code>init()</code> 再到 A.go 中的 <code>init()</code>。嵌套调用总是最深处的那个包的 <code>init()</code> 先调用。</li>
+</ul>
+</li>
+<li><p>Go 中有空白标识符 <code>_</code>，是一个只写变量。</p>
+</li>
 </ol>
 </div>
     </div>

@@ -4,7 +4,7 @@
     <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-    <meta name="description" content="Go快速入门（三）" />
+    <meta name="description" content="Go 快速入门（三）" />
     <meta name="hexo-theme-A4" content="v1.9.7" />
     <link rel="alternate icon" type="image/webp" href="/img/laptop-code.svg">
     <title>Casey</title>
@@ -288,7 +288,7 @@ mjx-container[display="true"] + br {
         
             
                 <div class="post-main-title" style="text-align: center;">
-                    Go快速入门（三）
+                    Go 快速入门（三）
                 </div>
             
         
@@ -313,7 +313,7 @@ mjx-container[display="true"] + br {
                     
                         &nbsp; | &nbsp;
                     
-                    <span>阅读估时：7分钟</span>
+                    <span>阅读估时：8分钟</span>
                 
                 
                     
@@ -354,9 +354,9 @@ mjx-container[display="true"] + br {
 <p>在 Go 语言中，闭包是指一个函数可以引用其外部作用域的变量，即使该作用域已经结束，变量仍然可以被这个函数访问和修改。换句话说，<strong>闭包是带有状态的函数</strong>。</p>
 </blockquote>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">(i <span class="type">int</span>)</span></span> <span class="function"><span class="keyword">func</span><span class="params">(<span class="type">int</span>)</span></span> <span class="type">int</span> {</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(x <span class="type">int</span>)</span></span> <span class="type">int</span> {</span><br><span class="line">    i++ <span class="comment">// i 为外部状态</span></span><br><span class="line">    <span class="keyword">return</span> x + i</span><br><span class="line">  }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">f := foo(<span class="number">0</span>)</span><br><span class="line">fmt.Println(f(<span class="number">1</span>)) <span class="comment">// i = 1, x = 1 -&gt; 2</span></span><br><span class="line">fmt.Println(f(<span class="number">2</span>)) <span class="comment">// i = 2, x = 2 -&gt; 4</span></span><br></pre></td></tr></table></figure>
-<h3 id="函数作为方法"><a href="#函数作为方法" class="headerlink" title="函数作为方法"></a>函数作为方法</h3><p>Go 中使用结构体实现 C 中类的作用，使用函数实现类的方法，下面是一个类方法的实现示例。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Student <span class="keyword">struct</span> {</span><br><span class="line">  id <span class="type">string</span></span><br><span class="line">  name <span class="type">string</span></span><br><span class="line">  age <span class="type">int</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Student)</span></span> add(x <span class="type">string</span>, y <span class="type">int</span>) {</span><br><span class="line">  s.name = s.name + x</span><br><span class="line">  s.age += y</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s Student)</span></span> <span class="built_in">print</span>() (<span class="type">string</span>, <span class="type">string</span>, <span class="type">int</span>) {</span><br><span class="line">  <span class="keyword">return</span> s.id, s.name, s.age</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">x := Student{<span class="string">"1"</span>, <span class="string">"casey"</span>, <span class="number">0</span>}</span><br><span class="line">s.add(<span class="string">"new"</span>, <span class="number">10</span>)</span><br><span class="line">fmt.Println(x.<span class="built_in">print</span>()) <span class="comment">// -&gt; 1 caseynew 10</span></span><br></pre></td></tr></table></figure>
-
+<h3 id="函数作为方法"><a href="#函数作为方法" class="headerlink" title="函数作为方法"></a>函数作为方法</h3><p>Go 中使用结构体实现 C 中类的作用，使用函数实现类的方法，与普通函数的差别是 <code>func</code> 和函数名之间需要加上结构体传入，下面是一个类方法的实现示例。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Student <span class="keyword">struct</span> {</span><br><span class="line">  id <span class="type">string</span></span><br><span class="line">  name <span class="type">string</span></span><br><span class="line">  age <span class="type">int</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Student)</span></span> add(x <span class="type">string</span>, y <span class="type">int</span>) { <span class="comment">// 传结构体址</span></span><br><span class="line">  s.name = s.name + x</span><br><span class="line">  s.age += y</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s Student)</span></span> <span class="built_in">print</span>() (<span class="type">string</span>, <span class="type">string</span>, <span class="type">int</span>) { <span class="comment">// 传结构体值</span></span><br><span class="line">  <span class="keyword">return</span> s.id, s.name, s.age</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">x := Student{<span class="string">"1"</span>, <span class="string">"casey"</span>, <span class="number">0</span>}</span><br><span class="line">s.add(<span class="string">"new"</span>, <span class="number">10</span>)</span><br><span class="line">fmt.Println(x.<span class="built_in">print</span>()) <span class="comment">// -&gt; 1 caseynew 10</span></span><br></pre></td></tr></table></figure>
+<p>结构体传入时的命名建议为结构体名的第一个小写字母，例如上面的结构体 <code>Student</code>，那么传入的参数名建议为 <code>s</code>。</p>
 <h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><h3 id="接口定义与使用"><a href="#接口定义与使用" class="headerlink" title="接口定义与使用"></a>接口定义与使用</h3><p>Go 中定义接口的一般方式如下。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> interface_name <span class="keyword">interface</span> {</span><br><span class="line">  method1([param list]) ([<span class="keyword">return</span> list])</span><br><span class="line">  method2([param list]) ([<span class="keyword">return</span> list])</span><br><span class="line">  ...</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
 
@@ -423,6 +423,8 @@ mjx-container[display="true"] + br {
             
     
             <div class="post-footer-pre-next">
+                
+                    <span>上一篇：<a href='/2025/02/23/20250223-Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-1/'>Go 快速入门（四）</a></span>
                 
 
                 
