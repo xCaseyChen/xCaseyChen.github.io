@@ -404,7 +404,7 @@ mjx-container[display="true"] + br {
 <li><p><code>init()</code> 函数调用顺序：</p>
 <ul>
 <li>对于同一个包中的 <code>init()</code>，调用顺序为文件名字符串比较由小到大调用。例如，同一个文件夹下有 A.go 和 B.go，均有 <code>init()</code> 函数，那么调用顺序为 A.go 中的 <code>init()</code> 到 B.go 中的 <code>init()</code>。</li>
-<li>对于调用的包中的 <code>init()</code>，调用顺序为 <code>import</code> 顺序。例如，A.go 依次调用了 B.go 和 C.go，且 B.go 和 C.go 都有 <code>init()</code>，那么调用顺序为 <code>B.go</code> 中的 <code>init()</code> 到 C.go 中的 <code>init()</code>。</li>
+<li>对于调用的包中的 <code>init()</code>，调用顺序为 <code>import</code> 顺序。例如，A.go 依次调用了 B.go 和 C.go，且 B.go 和 C.go 都有 <code>init()</code>，那么调用顺序为 B.go 中的 <code>init()</code> 到 C.go 中的 <code>init()</code>。</li>
 <li>对于调用的包中存在有依赖调用，调用的顺序为最早调用的包中的 <code>init()</code> 最后到当前包中的 <code>init()</code>。例如，基于 2 中的例子，我们再假设 A.go 中也存在 <code>init()</code> 函数，那么调用顺序为 B.go 中的 <code>init()</code> 到 C.go 中的 <code>init()</code> 再到 A.go 中的 <code>init()</code>。嵌套调用总是最深处的那个包的 <code>init()</code> 先调用。</li>
 </ul>
 </li>
