@@ -307,13 +307,13 @@ mjx-container[display="true"] + br {
                     
                         &nbsp; | &nbsp;
                     
-                     <span>字数总计：1.3k</span>
+                     <span>字数总计：1.6k</span>
                 
                 
                     
                         &nbsp; | &nbsp;
                     
-                    <span>阅读估时：5分钟</span>
+                    <span>阅读估时：6分钟</span>
                 
                 
                     
@@ -349,7 +349,7 @@ mjx-container[display="true"] + br {
 <p>上面的代码假设了一个文件打开的场景，其通过 <code>fmt.Errorf()</code> 额外为 <code>err</code> 提供了文件本身的描述，这里需要用到包裹错误专用的 <code>%w</code>。</p>
 <p><code>fmt.Errorf()</code> 返回一个 <code>fmt.wrapError</code> 类型的指针，结构体包含有输出的信息，和所包裹的 <code>error</code> 对象。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> wrapError <span class="keyword">struct</span> {</span><br><span class="line">  msg <span class="type">string</span></span><br><span class="line">  err <span class="type">error</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure>
-<p><code>*fmt.wrapError</code> 也实现了 <code>Error()</code> 函数，因此实现了 <code>error</code> 接口。<code>fmt.Errorf(format, ...)</code> 本质上是 <code>errors.New(fmt.Sprintf(format, ...))</code>，如果 <code>format</code> 中有 <code>%w</code>，则是可以 <code>Unwrap()</code> （解包）的，没有的话单纯的只是给出一个格式化错误字符串。</p>
+<p><code>*fmt.wrapError</code> 也实现了 <code>Error()</code> 函数，因此实现了 <code>error</code> 接口。<code>fmt.Errorf(format, ...)</code> 本质上是 <code>errors.New(fmt.Sprintf(format, ...))</code>，如果 <code>format</code> 中有 <code>%w</code>，则 <code>err != nil</code>，否则的话单纯的只是给出一个格式化错误字符串，并不包裹错误。</p>
 <p>Go 也提供了错误解包函数 <code>errors.Unwrap()</code>，由于包裹错误时存有 <code>error</code> 对象，所以这里实际作用是取出该对象。沿用上面的例子，拓展一下，错误解包使用方法如下。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">err = errors.Unwrap(wraperr)</span><br><span class="line">fmt.Println(err) <span class="comment">// -&gt; file not found</span></span><br></pre></td></tr></table></figure>
 <h4 id="组合错误"><a href="#组合错误" class="headerlink" title="组合错误"></a>组合错误</h4><p>对于多个错误，可以使用 <code>errors.Join()</code> 函数将多个非空错误进行组合。</p>
@@ -357,19 +357,23 @@ mjx-container[display="true"] + br {
 
 <p>组合后的错误类型为 <code>joinError</code> 结构体，实现如下。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> joinError <span class="keyword">struct</span> {</span><br><span class="line">  errs []<span class="type">error</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure>
-<p>所以组合错误的实质是将非空的错误存储入 <code>error</code> 切片，<code>joinError</code> 实现了 <code>Error()</code> 函数，所以也实现了 <code>error</code> 接口。</p>
+<p>所以组合错误的实质是将非空的错误存储入 <code>error</code> 切片，<code>joinError</code> 实现了 <code>Error()</code> 函数，所以也实现了 <code>error</code> 接口。组合后的错误也可以被包裹。</p>
 <p>Go 中并没有提供组合错误的分解方法，不过 <code>joinError</code> 本身实现了一个 <code>Unwrap()</code> 函数，返回错误切片，将上面错误组合的代码拓展，示例如下。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">errs := joinerr.(<span class="keyword">interface</span>{ Unwrap() []<span class="type">error</span> }).Unwrap()</span><br><span class="line"><span class="keyword">for</span> _, err := <span class="keyword">range</span> errs {</span><br><span class="line">  fmt.Println(err)</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
-<p>这里有一个细节，<code>joinerr</code> 此时的为 <code>error</code> 接口，无法直接调用 <code>Unwrap()</code> 函数。第一个思路是使用类型断言为 <code>joinError</code>，但是这个结构体类型是非导出的，所以此路不通。第二个思路是使用类型断言为 <code>interface { Unwrap() []error }</code> 实现调用 <code>Unwrap()</code> 函数。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">errs := joinerr.(<span class="keyword">interface</span>{ Unwrap() []<span class="type">error</span> }).Unwrap()</span><br><span class="line"><span class="keyword">for</span> _, err := <span class="keyword">range</span> errs {</span><br><span class="line">  fmt.Println(err) <span class="comment">// -&gt; this is error1\nthis is error3</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>这里有一个细节，<code>joinerr</code> 此时为 <code>error</code> 接口，无法直接调用 <code>Unwrap()</code> 函数。第一个思路是使用类型断言为 <code>joinError</code>，但是这个结构体类型是非导出的，所以此路不通。第二个思路是使用类型断言为 <code>interface { Unwrap() []error }</code> 实现调用 <code>Unwrap()</code> 函数。实际上，在源码 <code>/src/fmt/errors_test.go</code> 中有相同代码实现了该功能，但是该函数并不是可导出的。</p>
 <blockquote>
-<p>go 的源码结构清晰，注释明确，非常易于阅读，建议多看，加深对各类功能实现的理解。例如，这里 <code>joinError</code> 的源码位于 <code>src/errors/join.go</code> 中，包含有结构体与函数实现。</p>
+<p>go 的源码结构清晰，注释明确，非常易于阅读，建议多看，加深对各类功能实现的理解。例如，这里 <code>joinError</code> 的源码位于 <code>/src/errors/join.go</code> 中，包含有结构体与函数实现。</p>
 </blockquote>
 <h4 id="Is-and-As"><a href="#Is-and-As" class="headerlink" title="Is and As"></a>Is and As</h4><p><code>errors.Is(err, target)</code> 用于判断 <code>err</code> 是否等同于 <code>target</code>，或是 <code>err</code> 包裹了 <code>target</code>。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">err1 := errors.New(<span class="string">"this is an error"</span>)</span><br><span class="line">err2 := err1</span><br><span class="line">err3 := fmt.Errorf(<span class="string">"this is error3: %w"</span>, err1)</span><br><span class="line"><span class="keyword">if</span> errors.Is(err2, err1) {</span><br><span class="line">  fmt.Println(<span class="string">"err2 is err1"</span>) <span class="comment">// 输出</span></span><br><span class="line">}</span><br><span class="line"><span class="keyword">if</span> errors.Is(err3, err1) {</span><br><span class="line">  fmt.Println(<span class="string">"err3 is err1"</span>) <span class="comment">// 输出</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure>
 <p>注意，由于 <code>errors.New()</code> 返回的是指针，在比较时比较的因此也是指针。若两个错误的信息字符串一致但错误的地址不同，那么他们是不同的 <code>error</code>，例如下面这个例子。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">err1 := errors.New(<span class="string">"this is an error"</span>)</span><br><span class="line">err2 := errors.New(<span class="string">"this is an error"</span>)</span><br><span class="line"><span class="keyword">if</span> errors.Is(err2, err1) {</span><br><span class="line">  fmt.Println(<span class="string">"err2 is err1"</span>) <span class="comment">// 不输出</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure>
 
-<p><code>errors.As(err, target)</code> 检查 <code>err</code> 是否可以转换至 <code>target</code> 错误，成功时直接转换。TODO</p>
+<p><code>errors.As(err, target)</code> 的主要目的是为了从 <code>err</code> 中提取特定为 <code>target</code> 类型的错误，当在 <code>err</code> 中找到对应错误时，<code>target</code> 会直接指向错误。下面是一个示例，假设我们已经用 <code>err2</code> 包裹了错误 <code>err1</code>。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> MyError <span class="keyword">struct</span> {</span><br><span class="line">	Msg <span class="type">string</span></span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m *MyError)</span></span> Error() <span class="type">string</span> {</span><br><span class="line">	<span class="keyword">return</span> m.Msg</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> {</span><br><span class="line">	err1 := &amp;MyError{<span class="string">"myerror 1"</span>}</span><br><span class="line">	err2 := fmt.Errorf(<span class="string">"wrap myerror: %w"</span>, err1)</span><br><span class="line">	<span class="comment">// 得到包裹的错误 err2，希望用 err3 来接收特定的错误类型 MyError</span></span><br><span class="line">	<span class="keyword">var</span> err3 *MyError</span><br><span class="line">	<span class="keyword">if</span> errors.As(err2, &amp;err3) {</span><br><span class="line">		fmt.Printf(<span class="string">"%v\n%#v\n%p"</span>, err3, err2, err3)</span><br><span class="line">	}</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>输出的结果如下。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">myerror 1</span><br><span class="line">&amp;fmt.wrapError{msg:<span class="string">"wrap myerror: myerror 1"</span>, err:(*main.MyError)(0xc0000260a0)}</span><br><span class="line">0xc0000260a0</span><br></pre></td></tr></table></figure>
+<p>注意，在代码中，为了修改 <code>target</code> 指针的指向，需要传址。同时在结果中可以看到，<code>target</code> 正确指向了包裹错误中的 <code>MyError</code> 类型错误的地址。</p>
 <h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2></div>
     </div>
 
