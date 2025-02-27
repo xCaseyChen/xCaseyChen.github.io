@@ -396,6 +396,7 @@ mjx-container[display="true"] + br {
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">addsub</span><span class="params">(a, b <span class="type">int</span>)</span></span> (c, d <span class="type">int</span>) {</span><br><span class="line">  c = a + b</span><br><span class="line">  d = a - b</span><br><span class="line">  <span class="keyword">return</span></span><br><span class="line">}</span><br><span class="line">fmt.Println(addsub(<span class="number">10</span>, <span class="number">5</span>)) <span class="comment">// -&gt; 15 5</span></span><br></pre></td></tr></table></figure>
 <p>这样明确给返回值赋值，可以不用在返回时指明返回值。</p>
 <h3 id="接口到底能接收什么"><a href="#接口到底能接收什么" class="headerlink" title="接口到底能接收什么"></a>接口到底能接收什么</h3><p>接口既能接收值也能接收址，只要该变量能调用接口中的函数，那么就认为他可以被接口接收，接口可以赋值为该变量。</p>
+<h3 id="接口中对象的方法调用"><a href="#接口中对象的方法调用" class="headerlink" title="接口中对象的方法调用"></a>接口中对象的方法调用</h3><p>一旦某个对象被存入了接口，之后通过该接口只能调用接口中的方法，对象本身的方法无法调用，若想要调用，需要使用类型断言进行转换。</p>
 </div>
     </div>
 
