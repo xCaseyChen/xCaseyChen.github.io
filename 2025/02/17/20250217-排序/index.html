@@ -307,7 +307,7 @@ mjx-container[display="true"] + br {
                     
                         &nbsp; | &nbsp;
                     
-                     <span>字数总计：733</span>
+                     <span>字数总计：741</span>
                 
                 
                     
@@ -330,7 +330,7 @@ mjx-container[display="true"] + br {
         
             
         
-        <div class=".article-gallery"><p>这里主要介绍两种最为常见的排序算法。</p>
+        <div class=".article-gallery"><p>这里主要介绍两种最为常见的排序算法：快速排序，归并排序。</p>
 <h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><p>快速排序的基本思路为对于一段区间进行快排，确定其中一个数的位置，并且保证在这个数前面的数都小于它，在这个数后面的数都大于它，再对这个数前后两个子区间递归快排。</p>
 <p>快排递归的过程如下，<code>partition()</code> 为确定某个数位置的算法，返回值为该数的位置。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; nums = {...};</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">quicksort</span><span class="params">(<span class="type">int</span> start, <span class="type">int</span> end)</span> </span>{</span><br><span class="line">  <span class="keyword">if</span> (start &gt;= end) {</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  }</span><br><span class="line">  <span class="type">int</span> mid = <span class="built_in">partition</span>(start, end);</span><br><span class="line">  <span class="built_in">quicksort</span>(start, mid - <span class="number">1</span>);</span><br><span class="line">  <span class="built_in">quicksort</span>(mid + <span class="number">1</span>, end);</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
