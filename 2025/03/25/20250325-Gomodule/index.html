@@ -307,13 +307,13 @@ mjx-container[display="true"] + br {
                     
                         &nbsp; | &nbsp;
                     
-                     <span>字数总计：428</span>
+                     <span>字数总计：1k</span>
                 
                 
                     
                         &nbsp; | &nbsp;
                     
-                    <span>阅读估时：1分钟</span>
+                    <span>阅读估时：4分钟</span>
                 
                 
                     
@@ -341,9 +341,29 @@ mjx-container[display="true"] + br {
 <p>GOROOT 存储 Go 的编译器与标准库文件。</p>
 </blockquote>
 <p>除了 <code>src/</code> 文件夹，<code>bin/</code> 存储了编译后的可执行文件，<code>pkg/</code> 存储了编译后的包。在上面的结构中，当我们在 <code>myproject/</code> 中执行 <code>go install</code> 后，可以在 <code>bin/</code> 中发现一个新的可执行文件 <code>bin/myproject</code>。另外，当我们在 <code>mypackage/</code> 中执行 <code>go install</code> 后，我们会在 <code>pkg/</code> 文件夹中发现一个新的文件 <code>pkg/linux_amd64/myproject/mypackage.a</code>，这里的 <code>.a</code> 文件是预编译的包文件，可以加速编译，不可单独执行。</p>
-<h2 id="Go-Modules"><a href="#Go-Modules" class="headerlink" title="Go Modules"></a>Go Modules</h2><p>在引入了 Go Modules 进行包管理后，我们可以在任意的地方放置 Go 源码。但是，这并不意味着 <code>GOPATH</code> 没有用了，<code>GOPATH/pkg/mod</code> 存储不同版本的模块依赖，<code>GOPATH/bin</code> 存储 Go tools 的可执行文件（例如：<code>gopls</code> 等）。</p>
-<p>文件结构如下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">myproject/</span><br><span class="line">├── mypackage/</span><br><span class="line">│   └── myhello.go</span><br><span class="line">└── main.go</span><br></pre></td></tr></table></figure></div>
+<h2 id="Go-Modules"><a href="#Go-Modules" class="headerlink" title="Go Modules"></a>Go Modules</h2><p>在引入了 Go Modules 进行包管理后，<code>GOPATH/src/</code> 下的包会被忽略，但我们可以在任意的地方放置 Go 源码。这并不意味着 <code>GOPATH</code> 没有用了，<code>GOPATH/pkg/mod/</code> 存储不同版本的模块依赖，<code>GOPATH/bin/</code> 存储 Go tools 的可执行文件（例如：<code>gopls</code> 等）。</p>
+<h3 id="他干了啥"><a href="#他干了啥" class="headerlink" title="他干了啥"></a>他干了啥</h3><p>module 是一系列 package 的集合，带有版本控制与依赖追踪，并且在根目录有 <code>go.mod</code> 文件。</p>
+<p><code>go.mod</code> 文件定义了 module 的路径，同时也是 <code>import</code> 所需的路径。<code>go.mod</code> 文件同时包含有 module 所需的依赖，每个依赖包含有特定的 module 路径及版本信息。</p>
+<p>在一个带有 <code>go.mod</code> 文件的项目中执行 <code>go run main.go</code> 时，对于外部引入的 package，Go 检查的顺序如下为：</p>
+<ol>
+<li>标准库（<code>GOROOT/src</code>）</li>
+<li>当前目录（<code>./</code>）</li>
+<li>module cache（<code>GOPATH/pkg/mod/</code>）</li>
+<li>网络（<code>GOPROXY</code>）</li>
+</ol>
+<h3 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h3><p>例如，我们有以下项目结构。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">myproject/</span><br><span class="line">├── mypackage/</span><br><span class="line">│   └── myhello.go</span><br><span class="line">├── main.go</span><br><span class="line">└── go.mod</span><br></pre></td></tr></table></figure>
+<p><code>main.go</code> 及 <code>go.mod</code> 文件中有以下内容。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* main.go */</span></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    <span class="string">"github.com/google/uuid"</span></span><br><span class="line">    <span class="string">"myproject/mypackage"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">/* go.mod */</span></span><br><span class="line">module myproject</span><br><span class="line"></span><br><span class="line"><span class="keyword">go</span> <span class="number">1.24</span><span class="number">.0</span></span><br><span class="line"></span><br><span class="line">require github.com/google/uuid v1<span class="number">.3</span><span class="number">.0</span></span><br></pre></td></tr></table></figure>
+<p>当我们在 <code>myproject/</code> 下执行 <code>go run main.go</code> 时，会依次引入 <code>import</code> 所需的包。其中 <code>"github.com/google/uuid"</code> 首先会在本地文件夹中查询，在查找失败后会转向 <code>go.mod</code> 中得到对应的包及版本信息 <code>v1.3.0</code>，然后在本地 module cache（<code>GOPATH/pkg/mod/</code>）中查找 <code>GOPATH/pkg/mod/github.com/google/uuid@v1.3.0</code> 是否存在，再查找失败后会转向 <code>GOPROXY</code> 进行网络查询与下载。</p>
+<p>注意到，上面的例子假设了一个前提，即 <code>go.mod</code> 中存了对应 package 的版本信息，那如果没有存呢？Go 对于没有指定版本的 package 总是会自动拉取 lastest stable version，然后进行解析，并将当前的版本信息存入 <code>go.mod</code> 中。</p>
+<p>另外，<code>go.mod</code> 中有时会有出现：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">replace github.com/google/uuid =&gt; ../local_uuid</span><br><span class="line"></span><br><span class="line">replace github.com/google/uuid =&gt; github.com/google/uuid v1<span class="number">.2</span><span class="number">.0</span></span><br></pre></td></tr></table></figure>
+<p>这是对包解析进行重定向。在 <code>go.mod</code> 文件中 <code>replace</code> 优先级高于 <code>require</code>，多个 <code>replace</code> 会依次执行。</p>
+<h3 id="他怎么用"><a href="#他怎么用" class="headerlink" title="他怎么用"></a>他怎么用</h3><p>使用 <code>go mod init &lt;module-name&gt;</code> 初始化 <code>go.mod</code> 文件。</p>
+<p>使用 <code>go mod tidy</code> 命令可以实现：1. 移除未使用依赖；2. 添加缺失依赖；生成/更新 <code>go.sum</code> 文件。<code>go.sum</code> 文件存储引入模块的校验和，保证模块的完整性与一致性。</p>
+<p>在创建了自己的 module 后，若要在其他的项目使用自己的 module，需要将自己的 module 推送至远端，再从网络 <code>import</code> 对应的 package。也可以不从网络中下载，而是使用 <code>replace</code> 将所需 module 的相对路径进行替换。</p>
+</div>
     </div>
 
     <div class="post-meta">
