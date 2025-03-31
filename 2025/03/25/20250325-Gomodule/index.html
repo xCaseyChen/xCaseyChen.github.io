@@ -307,7 +307,7 @@ mjx-container[display="true"] + br {
                     
                         &nbsp; | &nbsp;
                     
-                     <span>字数总计：1k</span>
+                     <span>字数总计：1.1k</span>
                 
                 
                     
@@ -360,9 +360,10 @@ mjx-container[display="true"] + br {
 <p>另外，<code>go.mod</code> 中有时会有出现：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">replace github.com/google/uuid =&gt; ../local_uuid</span><br><span class="line"></span><br><span class="line">replace github.com/google/uuid =&gt; github.com/google/uuid v1<span class="number">.2</span><span class="number">.0</span></span><br></pre></td></tr></table></figure>
 <p>这是对包解析进行重定向。在 <code>go.mod</code> 文件中 <code>replace</code> 优先级高于 <code>require</code>，多个 <code>replace</code> 会依次执行。</p>
-<h3 id="他怎么用"><a href="#他怎么用" class="headerlink" title="他怎么用"></a>他怎么用</h3><p>使用 <code>go mod init &lt;module-name&gt;</code> 初始化 <code>go.mod</code> 文件。</p>
-<p>使用 <code>go mod tidy</code> 命令可以实现：1. 移除未使用依赖；2. 添加缺失依赖；生成/更新 <code>go.sum</code> 文件。<code>go.sum</code> 文件存储引入模块的校验和，保证模块的完整性与一致性。</p>
-<p>在创建了自己的 module 后，若要在其他的项目使用自己的 module，需要将自己的 module 推送至远端，再从网络 <code>import</code> 对应的 package。也可以不从网络中下载，而是使用 <code>replace</code> 将所需 module 的相对路径进行替换。</p>
+<h3 id="他怎么用"><a href="#他怎么用" class="headerlink" title="他怎么用"></a>他怎么用</h3><p>使用 <code>go mod init &lt;module-name&gt;</code> 初始化 <code>go.mod</code> 文件。<br>使用 <code>go mod tidy</code> 命令可以实现：1. 移除未使用依赖；2. 添加缺失依赖；生成/更新 <code>go.sum</code> 文件。<code>go.sum</code> 文件存储引入模块的校验和，保证模块的完整性与一致性。</p>
+<h3 id="版本控制"><a href="#版本控制" class="headerlink" title="版本控制"></a>版本控制</h3><p>在创建了自己的 module 后，若要在其他的项目使用自己的 module，需要将自己的 module 推送至远端，再从网络 <code>import</code> 对应的 package。也可以不从网络中下载，而是使用 <code>replace</code> 将所需 module 的相对路径进行替换。</p>
+<p>Major.Minor.Patch</p>
+<p>git tag for all update <br>update go.mod for major update …/v2</p>
 </div>
     </div>
 
