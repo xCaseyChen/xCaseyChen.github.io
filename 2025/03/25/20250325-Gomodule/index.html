@@ -307,7 +307,7 @@ mjx-container[display="true"] + br {
                     
                         &nbsp; | &nbsp;
                     
-                     <span>字数总计：0</span>
+                     <span>字数总计：428</span>
                 
                 
                     
@@ -330,7 +330,20 @@ mjx-container[display="true"] + br {
         
             
         
-        <div class=".article-gallery"></div>
+        <div class=".article-gallery"><p>由于 Go 的版本在不断的更新，其依赖管理的方式也在改变。在引入 Go Modules 之前和之后的依赖管理并不一致，现在更多的使用 Go Modules，但旧的包管理方式仍然存在。</p>
+<h2 id="Before-Go-Modules"><a href="#Before-Go-Modules" class="headerlink" title="Before Go Modules"></a>Before Go Modules</h2><p>新版本的 Go（Go version &gt;= 1.11）会默认启用 Go Modules，使用旧版的包管理需要手动关闭 Go Modules。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> GO111MODULE=off</span><br></pre></td></tr></table></figure>
+
+<p>在很多的教程中会建议我们将 Go 的源代码以以下结构进行组织。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GOPATH/</span><br><span class="line">├── src/</span><br><span class="line">│   └── myproject/</span><br><span class="line">│       ├── mypackage/</span><br><span class="line">│       │   └── myhello.go</span><br><span class="line">│       └── main.go</span><br><span class="line">├── bin/</span><br><span class="line">└── pkg/</span><br></pre></td></tr></table></figure>
+<p>其中的 <code>src/</code> 文件夹下存储源代码。在没有 Go Modules 时，当我们进行 <code>import</code>，Go 会在 <code>GOPATH</code> 和 <code>GOROOT</code> 下查找对应的包。因此，为了便于引用包，很多的教程会建议我们将代码写在 <code>GOPATH/src/</code> 下。</p>
+<blockquote>
+<p>GOROOT 存储 Go 的编译器与标准库文件。</p>
+</blockquote>
+<p>除了 <code>src/</code> 文件夹，<code>bin/</code> 存储了编译后的可执行文件，<code>pkg/</code> 存储了编译后的包。在上面的结构中，当我们在 <code>myproject/</code> 中执行 <code>go install</code> 后，可以在 <code>bin/</code> 中发现一个新的可执行文件 <code>bin/myproject</code>。另外，当我们在 <code>mypackage/</code> 中执行 <code>go install</code> 后，我们会在 <code>pkg/</code> 文件夹中发现一个新的文件 <code>pkg/linux_amd64/myproject/mypackage.a</code>，这里的 <code>.a</code> 文件是预编译的包文件，可以加速编译，不可单独执行。</p>
+<h2 id="Go-Modules"><a href="#Go-Modules" class="headerlink" title="Go Modules"></a>Go Modules</h2><p>在引入了 Go Modules 进行包管理后，我们可以在任意的地方放置 Go 源码。但是，这并不意味着 <code>GOPATH</code> 没有用了，<code>GOPATH/pkg/mod</code> 存储不同版本的模块依赖，<code>GOPATH/bin</code> 存储 Go tools 的可执行文件（例如：<code>gopls</code> 等）。</p>
+<p>文件结构如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">myproject/</span><br><span class="line">├── mypackage/</span><br><span class="line">│   └── myhello.go</span><br><span class="line">└── main.go</span><br></pre></td></tr></table></figure></div>
     </div>
 
     <div class="post-meta">
