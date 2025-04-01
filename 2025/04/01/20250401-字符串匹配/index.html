@@ -4,7 +4,7 @@
     <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-    <meta name="description" content="20250401-KMP" />
+    <meta name="description" content="20250401-字符串匹配" />
     <meta name="hexo-theme-A4" content="v1.9.7" />
     <link rel="alternate icon" type="image/webp" href="/img/laptop-code.svg">
     <title>Casey</title>
@@ -288,7 +288,7 @@ mjx-container[display="true"] + br {
         
             
                 <div class="post-main-title" style="text-align: center;">
-                    20250401-KMP
+                    20250401-字符串匹配
                 </div>
             
         
@@ -307,7 +307,7 @@ mjx-container[display="true"] + br {
                     
                         &nbsp; | &nbsp;
                     
-                     <span>字数总计：0</span>
+                     <span>字数总计：449</span>
                 
                 
                     
@@ -330,7 +330,22 @@ mjx-container[display="true"] + br {
         
             
         
-        <div class=".article-gallery"></div>
+        <div class=".article-gallery"><p>对于一个目标串 <code>t</code> 和一个模式串 <code>p</code>，如何判断目标串中是否存在模式串？</p>
+<blockquote>
+<p>例如：<br>若 <code>t = "ababa"</code>，<code>p = "ab"</code>，则目标串中存在模式串。<br>若 <code>t = "ababa"</code>，<code>p = "ac"</code>，则目标串中不存在模式串。</p>
+</blockquote>
+<h2 id="朴素思路"><a href="#朴素思路" class="headerlink" title="朴素思路"></a>朴素思路</h2><p>字符串匹配问题的朴素思路为遍历目标串 <code>t</code> 中的每个合法的位置，从该位置开始与模式串 <code>p</code> 依次进行比较，从而判断是否匹配，代码如下。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">match</span><span class="params">(<span class="type">const</span> string &amp;t, <span class="type">const</span> string &amp;p)</span> </span>{</span><br><span class="line">    <span class="type">int</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; t.<span class="built_in">size</span>() - p.<span class="built_in">size</span>() + <span class="number">1</span>; i++) {</span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; p.<span class="built_in">size</span>(); j++) {</span><br><span class="line">            <span class="keyword">if</span> (t[i + j] != p[j]) {</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (j == p.<span class="built_in">size</span>()) { <span class="comment">// 若匹配到 p.size() 位置则匹配成功</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<p>不难看出，朴素思路的算法的时间复杂度为 <code>O(t.size() * p.size())</code>。当目标串和模式串长度较长时，算法的性能较差。</p>
+<h2 id="KMP"><a href="#KMP" class="headerlink" title="KMP"></a>KMP</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">get_next</span><span class="params">(<span class="type">const</span> string &amp;p)</span> </span>{</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">ne</span><span class="params">(p.size(), <span class="number">0</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">kmp</span><span class="params">(<span class="type">const</span> string &amp;t, <span class="type">const</span> string &amp;p)</span> </span>{</span><br><span class="line"></span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<h2 id="问题拓展"><a href="#问题拓展" class="headerlink" title="问题拓展"></a>问题拓展</h2><p>传统字符串匹配问题的拓展：对于目标串 <code>t</code> 和模式串 <code>p</code>，求出目标串中所有匹配模式串的索引。</p>
+<blockquote>
+<p>例如：<br>若 <code>t = "ababa"</code>，<code>p = "ab"</code>，那么目标串所有匹配的索引为：<code>{0, 2}</code>。<br>若 <code>t = "ababa"</code>，<code>p = "ac"</code>，那么目标串所有匹配的索引为：<code>{}</code>。</p>
+</blockquote>
+<p>拓展的字符串匹配问题需要在得到一次匹配后对该次匹配的结果进行记录并进行下一次匹配，拓展的朴素算法及 KMP 算法如下。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">match</span><span class="params">(<span class="type">const</span> string &amp;t, <span class="type">const</span> string &amp;p)</span> </span>{</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; res;</span><br><span class="line">    <span class="type">int</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; t.<span class="built_in">size</span>() - p.<span class="built_in">size</span>() + <span class="number">1</span>; i++) {</span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; p.<span class="built_in">size</span>(); j++) {</span><br><span class="line">            <span class="keyword">if</span> (t[i + j] != p[j]) {</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (j == p.<span class="built_in">size</span>()) {</span><br><span class="line">            res.<span class="built_in">push_back</span>(i);</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure></div>
     </div>
 
     <div class="post-meta">
