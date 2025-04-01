@@ -364,7 +364,7 @@ mjx-container[display="true"] + br {
 <p>使用 <code>go mod tidy</code> 命令可以实现：1. 移除未使用依赖；2. 添加缺失依赖；生成/更新 <code>go.sum</code> 文件。<code>go.sum</code> 文件存储引入模块的校验和，保证模块的完整性与一致性。</p>
 <h2 id="Go-Modules-题外话"><a href="#Go-Modules-题外话" class="headerlink" title="Go Modules 题外话"></a>Go Modules 题外话</h2><h3 id="最大的优势"><a href="#最大的优势" class="headerlink" title="最大的优势"></a>最大的优势</h3><p>在引入 Go Modules 功能后，最大的优势在于可以更好的进行依赖管理。在传统的 <code>GOPATH</code> 包管理模式下，我们要控制不同项目所使用包的版本是很困难的，实在是缺乏灵活性。</p>
 <p>Go Modules 的引入大大方便了不同版本包的依赖管理，让代码从 <code>GOPATH/src/</code> 中解放，同时提供了便利的 <code>go mod</code> 命令实现自动化管理。</p>
-<h3 id="如何命名"><a href="#如何命名" class="headerlink" title="如何命名"></a>如何命名</h3><p>对于自己写的 module，建议的命名方式为 <code>github.com/username/reponame</code>，这样可以保证 Go 远程拉取的正确执行。</p>
+<h3 id="如何命名"><a href="#如何命名" class="headerlink" title="如何命名"></a>如何命名</h3><p>对于自己写的 module，建议的命名方式为 <code>github.com/username/modulename</code>，这样可以保证 Go 远程拉取的正确执行。</p>
 <h3 id="版本控制"><a href="#版本控制" class="headerlink" title="版本控制"></a>版本控制</h3><p>在写自己的 Module 时需要考虑版本控制的问题，版本命名一般遵循顺序为 <code>v Major.Minor.Patch</code>。</p>
 <p>对于 <code>Minor</code> 及 <code>Patch</code> 的更新，我们需要做的是使用 <code>git tag v1.x.x</code> 将小版本更新打上 tag 并推送（本地或是远程均可），实现对不同版本的区分。</p>
 <p>而对于 <code>Major</code> 的大版本更新，我们需要将其视为不同的 package，示例如下。</p>
