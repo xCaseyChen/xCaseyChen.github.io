@@ -336,20 +336,20 @@ mjx-container[display="true"] + br {
 
 <p>在很多的教程中会建议我们将 Go 的源代码以以下结构进行组织。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GOPATH/</span><br><span class="line">├── src/</span><br><span class="line">│   └── myproject/</span><br><span class="line">│       ├── mypackage/</span><br><span class="line">│       │   └── myhello.go</span><br><span class="line">│       └── main.go</span><br><span class="line">├── bin/</span><br><span class="line">└── pkg/</span><br></pre></td></tr></table></figure>
-<p>其中的 <code>src/</code> 文件夹下存储源代码。在没有 Go Modules 时，当我们进行 <code>import</code>，Go 会在 <code>GOPATH</code> 和 <code>GOROOT</code> 下查找对应的包。因此，为了便于引用包，很多的教程会建议我们将代码写在 <code>GOPATH/src/</code> 下。</p>
+<p>其中的 <code>src/</code> 文件夹下存储源代码。在没有 Go Modules 时，当我们进行 <code>import</code>，Go 会在 <code>GOROOT</code> 和 <code>GOPATH</code> 下查找对应的包。因此，为了便于引用自定义的包（例如上面的 <code>mypackage/</code>），很多的教程会建议我们将代码写在 <code>GOPATH/src/</code> 下。</p>
 <blockquote>
-<p>GOROOT 存储 Go 的编译器与标准库文件。</p>
+<p><code>GOROOT</code> 存储 Go 的编译器与标准库文件。</p>
 </blockquote>
 <p>除了 <code>src/</code> 文件夹，<code>bin/</code> 存储了编译后的可执行文件，<code>pkg/</code> 存储了编译后的包。在上面的结构中，当我们在 <code>myproject/</code> 中执行 <code>go install</code> 后，可以在 <code>bin/</code> 中发现一个新的可执行文件 <code>bin/myproject</code>。另外，当我们在 <code>mypackage/</code> 中执行 <code>go install</code> 后，我们会在 <code>pkg/</code> 文件夹中发现一个新的文件 <code>pkg/linux_amd64/myproject/mypackage.a</code>，这里的 <code>.a</code> 文件是预编译的包文件，可以加速编译，不可单独执行。</p>
 <h2 id="Go-Modules"><a href="#Go-Modules" class="headerlink" title="Go Modules"></a>Go Modules</h2><p>在引入了 Go Modules 进行包管理后，<code>GOPATH/src/</code> 下的包会被忽略，但我们可以在任意的地方放置 Go 源码。这并不意味着 <code>GOPATH</code> 没有用了，<code>GOPATH/pkg/mod/</code> 存储不同版本的模块依赖，<code>GOPATH/bin/</code> 存储 Go tools 的可执行文件（例如：<code>gopls</code> 等）。</p>
 <h3 id="他干了啥"><a href="#他干了啥" class="headerlink" title="他干了啥"></a>他干了啥</h3><p>module 是一系列 package 的集合，带有版本控制与依赖追踪，并且在根目录有 <code>go.mod</code> 文件。</p>
-<p><code>go.mod</code> 文件定义了 module 的路径，同时也是 <code>import</code> 所需的路径。<code>go.mod</code> 文件同时包含有 module 所需的依赖，每个依赖包含有特定的 module 路径及版本信息。</p>
-<p>在一个带有 <code>go.mod</code> 文件的项目中执行 <code>go run main.go</code> 时，对于外部引入的 package，Go 检查的顺序如下为：</p>
+<p><code>go.mod</code> 文件定义了 module 的名称，同时也含有 <code>import</code> 所需的路径。<code>go.mod</code> 文件包含有 module 所需的依赖，每个依赖包含有特定的 module 路径及版本信息。</p>
+<p>在一个带有 <code>go.mod</code> 文件的项目中，对于外部引入的 package，Go 检查的顺序如下为：</p>
 <ol>
-<li>标准库（<code>GOROOT/src</code>）</li>
+<li>标准库（<code>GOROOT/src/</code>）</li>
 <li>当前目录（<code>./</code>）</li>
 <li>module cache（<code>GOPATH/pkg/mod/</code>）</li>
-<li>网络（<code>GOPROXY</code>）</li>
+<li>网络（<code>GOPROXY/</code>）</li>
 </ol>
 <h3 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h3><p>例如，我们有以下项目结构。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">myproject/</span><br><span class="line">├── mypackage/</span><br><span class="line">│   └── myhello.go</span><br><span class="line">├── main.go</span><br><span class="line">└── go.mod</span><br></pre></td></tr></table></figure>
@@ -362,7 +362,7 @@ mjx-container[display="true"] + br {
 <p><code>replace</code> 对包解析进行重定向。在 <code>go.mod</code> 文件中 <code>replace</code> 优先级高于 <code>require</code>，多个 <code>replace</code> 会依次执行。</p>
 <h3 id="基础操作"><a href="#基础操作" class="headerlink" title="基础操作"></a>基础操作</h3><p>使用 <code>go mod init &lt;module-name&gt;</code> 初始化 <code>go.mod</code> 文件。</p>
 <p>使用 <code>go mod tidy</code> 命令可以实现：1. 移除未使用依赖；2. 添加缺失依赖；生成/更新 <code>go.sum</code> 文件。<code>go.sum</code> 文件存储引入模块的校验和，保证模块的完整性与一致性。</p>
-<h3 id="题外话"><a href="#题外话" class="headerlink" title="题外话"></a>题外话</h3><h4 id="最大的优势"><a href="#最大的优势" class="headerlink" title="最大的优势"></a>最大的优势</h4><p>在引入 Go Modules 功能后，最大的优势在于可以更好的进行依赖管理。在传统的 <code>GOPATH</code> 包管理模式下，我们要控制我们所使用包的版本是很困难的，实在是缺乏灵活性。</p>
+<h3 id="题外话"><a href="#题外话" class="headerlink" title="题外话"></a>题外话</h3><h4 id="最大的优势"><a href="#最大的优势" class="headerlink" title="最大的优势"></a>最大的优势</h4><p>在引入 Go Modules 功能后，最大的优势在于可以更好的进行依赖管理。在传统的 <code>GOPATH</code> 包管理模式下，我们要控制不同项目所使用包的版本是很困难的，实在是缺乏灵活性。</p>
 <p>Go Modules 的引入大大方便了不同版本包的依赖管理，让代码从 <code>GOPATH/src/</code> 中解放，同时提供了便利的 <code>go mod</code> 命令实现自动化管理。</p>
 <h4 id="版本控制"><a href="#版本控制" class="headerlink" title="版本控制"></a>版本控制</h4><p>在写自己的 Module 时需要考虑版本控制的问题，版本命名一般遵循顺序为 <code>v Major.Minor.Patch</code>。</p>
 <p>对于 <code>Minor</code> 及 <code>Patch</code> 的更新，我们需要做的是使用 <code>git tag v1.x.x</code> 将小版本更新打上 tag 并推送（本地或是远程均可），实现对不同版本的区分。</p>
