@@ -307,7 +307,7 @@ mjx-container[display="true"] + br {
                     
                         &nbsp; | &nbsp;
                     
-                     <span>字数总计：1.3k</span>
+                     <span>字数总计：1.4k</span>
                 
                 
                     
@@ -361,7 +361,9 @@ mjx-container[display="true"] + br {
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">replace github.com/google/uuid =&gt; ../local_uuid</span><br><span class="line"></span><br><span class="line">replace github.com/google/uuid =&gt; github.com/google/uuid v1<span class="number">.4</span><span class="number">.0</span></span><br></pre></td></tr></table></figure>
 <p><code>replace</code> 对包解析进行重定向。在 <code>go.mod</code> 文件中 <code>replace</code> 优先级高于 <code>require</code>，多个 <code>replace</code> 会依次执行。</p>
 <h3 id="基础操作"><a href="#基础操作" class="headerlink" title="基础操作"></a>基础操作</h3><p>使用 <code>go mod init &lt;module-name&gt;</code> 初始化 <code>go.mod</code> 文件。</p>
-<p>使用 <code>go mod tidy</code> 命令可以实现：1. 移除未使用依赖；2. 添加缺失依赖；生成/更新 <code>go.sum</code> 文件。<code>go.sum</code> 文件存储引入模块的校验和，保证模块的完整性与一致性。</p>
+<p>使用 <code>go mod tidy</code> 命令可以实现：1. 移除未使用依赖；2. 添加缺失依赖；生成/更新 <code>go.sum</code> 文件。<code>go.sum</code> 文件存储引入模块的校验和，保证模块的完整性与一致性，示例如下。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">github.com/google/uuid v1<span class="number">.6</span><span class="number">.0</span> h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+<span class="number">94</span>F0= <span class="comment">// module integrity</span></span><br><span class="line">github.com/google/uuid v1<span class="number">.6</span><span class="number">.0</span>/<span class="keyword">go</span>.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo= <span class="comment">// go.mod file of the module unchanged</span></span><br></pre></td></tr></table></figure>
+
 <h2 id="Go-Modules-题外话"><a href="#Go-Modules-题外话" class="headerlink" title="Go Modules 题外话"></a>Go Modules 题外话</h2><h3 id="最大的优势"><a href="#最大的优势" class="headerlink" title="最大的优势"></a>最大的优势</h3><p>在引入 Go Modules 功能后，最大的优势在于可以更好的进行依赖管理。在传统的 <code>GOPATH</code> 包管理模式下，我们要控制不同项目所使用包的版本是很困难的，实在是缺乏灵活性。</p>
 <p>Go Modules 的引入大大方便了不同版本包的依赖管理，让代码从 <code>GOPATH/src/</code> 中解放，同时提供了便利的 <code>go mod</code> 命令实现自动化管理。</p>
 <h3 id="如何命名"><a href="#如何命名" class="headerlink" title="如何命名"></a>如何命名</h3><p>对于自己写的 module，建议的命名方式为 <code>github.com/username/modulename</code>，这样可以保证 Go 远程拉取的正确执行。</p>
