@@ -343,7 +343,7 @@ mjx-container[display="true"] + br {
 <p>除了 <code>src/</code> 文件夹，<code>bin/</code> 存储了编译后的可执行文件，<code>pkg/</code> 存储了编译后的包。在上面的结构中，当我们在 <code>myproject/</code> 中执行 <code>go install</code> 后，可以在 <code>bin/</code> 中发现一个新的可执行文件 <code>bin/myproject</code>。另外，当我们在 <code>mypackage/</code> 中执行 <code>go install</code> 后，我们会在 <code>pkg/</code> 文件夹中发现一个新的文件 <code>pkg/linux_amd64/myproject/mypackage.a</code>，这里的 <code>.a</code> 文件是预编译的包文件，可以加速编译，不可单独执行。</p>
 <h2 id="Go-Modules"><a href="#Go-Modules" class="headerlink" title="Go Modules"></a>Go Modules</h2><p>在引入了 Go Modules 进行包管理后，<code>GOPATH/src/</code> 下的包会被忽略，但我们可以在任意的地方放置 Go 源码。这并不意味着 <code>GOPATH</code> 没有用了，<code>GOPATH/pkg/mod/</code> 存储不同版本的模块依赖，<code>GOPATH/bin/</code> 存储 Go tools 的可执行文件（例如：<code>gopls</code> 等）。</p>
 <h3 id="他干了啥"><a href="#他干了啥" class="headerlink" title="他干了啥"></a>他干了啥</h3><p>module 是一系列 package 的集合，带有版本控制与依赖追踪，并且在根目录有 <code>go.mod</code> 文件。</p>
-<p><code>go.mod</code> 文件定义了 module 的名称，同时也含有 <code>import</code> 所需的路径。<code>go.mod</code> 文件包含有 module 所需的依赖，每个依赖包含有特定的 module 路径及版本信息。</p>
+<p><code>go.mod</code> 文件定义了 module 的名称，同时也含有 module 所需的依赖，每个依赖包含有特定的 module 路径及版本信息。</p>
 <p>在一个带有 <code>go.mod</code> 文件的项目中，对于外部引入的 package，Go 检查的顺序如下为：</p>
 <ol>
 <li>标准库（<code>GOROOT/src/</code>）</li>
