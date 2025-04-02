@@ -307,13 +307,13 @@ mjx-container[display="true"] + br {
                     
                         &nbsp; | &nbsp;
                     
-                     <span>字数总计：491</span>
+                     <span>字数总计：575</span>
                 
                 
                     
                         &nbsp; | &nbsp;
                     
-                    <span>阅读估时：1分钟</span>
+                    <span>阅读估时：2分钟</span>
                 
                 
                     
@@ -331,16 +331,16 @@ mjx-container[display="true"] + br {
             
         
         <div class=".article-gallery"><p>并查集主要解决的是集合上的问题，可以实现将两个集合合并，和查询两个元素是否在一个集合中。</p>
-<h2 id="构造"><a href="#构造" class="headerlink" title="构造"></a>构造</h2><p>并查集的构造方式为：将一个集合构造为一棵树，树中的节点为集合中的元素，每个节点存储有父节点的指针，根节点为该集合标识且其父节点为自身。并查集的合并操作为可以视作两棵树的合并操作（一棵树作为另一棵树的子树），查询两个元素是否在一个集合中可以通过检查两个元素的根节点是否一致实现。</p>
+<h2 id="构造"><a href="#构造" class="headerlink" title="构造"></a>构造</h2><p>并查集的构造方式为：将一个集合构造为一棵树，树中的节点为集合中的元素，每个节点存储有父节点的指针，根节点为该集合标识且其父节点为自身。并查集的合并操作为可以视作两棵树的合并操作（一棵树作为另一棵树的子树），查询两个元素是否在一个集合中可以通过检查两个元素所在树的根节点是否一致实现。</p>
 <p>根据上述的描述，并查集在代码中的实现方式如下。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> parent[N]; <span class="comment">// N is the maximum number of elements</span></span><br><span class="line"><span class="type">int</span> n; <span class="comment">// n is the actual number of elements</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">init</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line">        parent[i] = i;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
-<p>查找元素的根节点及集合合并操作的代码实现如下。</p>
+<p>查找元素所在树的根节点及集合合并操作的代码实现如下。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">find</span><span class="params">(<span class="type">int</span> x)</span> </span>{</span><br><span class="line">    <span class="keyword">return</span> parent[x] == x ? x : <span class="built_in">find</span>(parent[x]);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">unite</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> </span>{</span><br><span class="line">    <span class="type">int</span> rx = <span class="built_in">find</span>(x), ry = <span class="built_in">find</span>(y);</span><br><span class="line">    <span class="keyword">if</span> (rx != ry) {</span><br><span class="line">        parent[rx] = ry;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
 
-<h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><p>当集合中的元素增多时，查找元素根节点和集合合并的操作会因树深度的增大而效率降低。针对这一现象，并查集的查找与合并操作需要优化。</p>
-<h3 id="路径压缩"><a href="#路径压缩" class="headerlink" title="路径压缩"></a>路径压缩</h3><p>每次查询后将路径上的所有节点直接连接至根节点。</p>
+<h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><p>当集合中的元素增多时，查找根节点和集合合并的操作会因树深度的增大而效率降低。针对这一现象，并查集的查找与合并操作需要优化。</p>
+<h3 id="路径压缩"><a href="#路径压缩" class="headerlink" title="路径压缩"></a>路径压缩</h3><p>路径压缩主要针对查找操作进行优化，每次查找某一元素的根节点时，会将该元素到根节点路径上的所有节点直接连接至根节点，使后续对该元素及路径上的元素查询更快。代码实现如下。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">find</span><span class="params">(<span class="type">int</span> x)</span> </span>{</span><br><span class="line">    <span class="keyword">return</span> parent[x] == x ? x : parent[x] = <span class="built_in">find</span>(parent[x]);</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
-<h3 id="按秩合并"><a href="#按秩合并" class="headerlink" title="按秩合并"></a>按秩合并</h3><p>使用秩标识树的深度，将较小秩的集合作为子树合并至较大秩的集合。</p>
+<h3 id="按秩合并"><a href="#按秩合并" class="headerlink" title="按秩合并"></a>按秩合并</h3><p>按秩合并使用额外的数组秩 <code>rank[]</code> 标识集合树的深度，每次合并时会将较小秩的集合作为子树合并至较大秩的集合。代码实现如下。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> rank[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">unite</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> </span>{</span><br><span class="line">    <span class="type">int</span> rx = <span class="built_in">find</span>(x), ry = <span class="built_in">find</span>(y);</span><br><span class="line">    <span class="keyword">if</span> (rx != ry) {</span><br><span class="line">        <span class="keyword">if</span> (rank[rx] &gt; rank[ry]) {</span><br><span class="line">            parent[ry] = rx;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (rank[rx] &lt; rank[ry]) {</span><br><span class="line">            parent[rx] = ry;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">else</span> {</span><br><span class="line">            parent[ry] = rx;</span><br><span class="line">            rank[rx]++;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
 <p>注意，此处的<code>rank[]</code> 为秩的估计值，而非真实值，因此不需要严格的更新因路径压缩产生的变化。</p>
 </div>
