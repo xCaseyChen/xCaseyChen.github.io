@@ -307,7 +307,7 @@ mjx-container[display="true"] + br {
                     
                         &nbsp; | &nbsp;
                     
-                     <span>字数总计：267</span>
+                     <span>字数总计：269</span>
                 
                 
                     
@@ -351,7 +351,7 @@ mjx-container[display="true"] + br {
 <h3 id="priority-queue-容器"><a href="#priority-queue-容器" class="headerlink" title="priority_queue 容器"></a>priority_queue 容器</h3><p>C++ 中可以使用 STL 实现堆，如下。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">priority_queue&lt;<span class="type">int</span>&gt; max_heap; <span class="comment">// 大根堆</span></span><br><span class="line">priority_queue&lt;<span class="type">int</span>, vector&lt;<span class="type">int</span>&gt;, greater&lt;<span class="type">int</span>&gt;&gt; min_heap; <span class="comment">// 小根堆</span></span><br></pre></td></tr></table></figure>
 <p>默认的 <code>less</code>，使得数值更小的优先级更小，而 priority_queue 实现的是优先级更高的先输出（在堆顶），因此默认为大根堆。</p>
-<h3 id="heap-函数"><a href="#heap-函数" class="headerlink" title="heap 函数"></a>heap 函数</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">make_heap</span>()</span><br><span class="line"><span class="built_in">heap_push</span>()</span><br><span class="line"><span class="built_in">heap_pop</span>()</span><br><span class="line"><span class="built_in">sort_heap</span>()</span><br></pre></td></tr></table></figure></div>
+<h3 id="heap-函数"><a href="#heap-函数" class="headerlink" title="heap 函数"></a>heap 函数</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">make_heap</span>()</span><br><span class="line"><span class="built_in">heap_push</span>()</span><br><span class="line"><span class="built_in">heap_pop</span>()</span><br><span class="line"><span class="built_in">sort_heap</span>()</span><br><span class="line"><span class="built_in">is_heap</span>()</span><br><span class="line"><span class="built_in">is_heap_until</span>()</span><br></pre></td></tr></table></figure></div>
     </div>
 
     <div class="post-meta">
